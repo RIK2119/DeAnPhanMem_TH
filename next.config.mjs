@@ -7,18 +7,23 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
 	reactStrictMode: true,
-	experimental: { appDir: true },
+	experimental: { appDir: true, serverActions: true },
+
+	images: {
+		domains: ["i1-vnexpress.vnecdn.net", "i1-kinhdoanh.vnecdn.net", "images.clerk.dev"],
+	},
 
 	/**
 	 * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
 	 * out.
 	 *
 	 * @see https://github.com/vercel/next.js/issues/41980
-	 */
-	// i18n: {
-	// 	locales: ["en"],
-	// 	defaultLocale: "en",
-	// },
+	 
+	i18n: {
+		locales: ["en"],
+		defaultLocale: "en",
+	},
+	*/
 };
 export default config;
 

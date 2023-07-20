@@ -1,13 +1,23 @@
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { connect } from "@planetscale/database";
 
+import * as BanTin from "./schema/banTin";
+import * as chuyenGia from "./schema/chuyenGia";
+import * as danhGia from "./schema/danhGia";
+import * as danhMuc from "./schema/danhMuc";
+import * as nguoiDung from "./schema/nguoiDung";
+import * as nhanVien from "./schema/nhanVien";
+import * as yeuCau from "./schema/yeuCau";
+
 import { env } from "@/env.mjs";
 
-// create the connection
 const connection = connect({
 	host: env.DATABASE_HOST,
 	username: env.DATABASE_USERNAME,
 	password: env.DATABASE_PASSWORD,
 });
 
-export const db = drizzle(connection);
+export const db = drizzle(connection, {
+	schema: { ...BanTin, ...chuyenGia, ...danhGia, ...danhMuc, ...nguoiDung, ...nhanVien, ...yeuCau },
+	logger: true,
+});

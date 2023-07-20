@@ -11,6 +11,9 @@ export const env = createEnv({
 		DATABASE_HOST: z.string(),
 		DATABASE_USERNAME: z.string(),
 		DATABASE_PASSWORD: z.string(),
+		DATABASE_URL: z.string(),
+
+		CLERK_SECRET_KEY: z.string(),
 	},
 
 	/**
@@ -20,6 +23,7 @@ export const env = createEnv({
 	 */
 	client: {
 		// NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
 	},
 
 	/**
@@ -31,6 +35,10 @@ export const env = createEnv({
 		DATABASE_HOST: process.env.DATABASE_HOST,
 		DATABASE_USERNAME: process.env.DATABASE_USERNAME,
 		DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
+		DATABASE_URL: process.env.DATABASE_URL,
+
+		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 
 		// NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 	},

@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { datetime, mysqlTable, varchar } from "drizzle-orm/mysql-core";
 
 import { ChuyenGiaTable } from "./chuyenGia";

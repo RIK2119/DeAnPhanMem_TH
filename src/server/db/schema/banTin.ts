@@ -4,6 +4,8 @@ import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-or
 import { DanhGiaTable } from "./danhGia";
 import { DanhMucTable } from "./danhMuc";
 import { NhanVienTable } from "./nhanVien";
+import { BanTinDaLuuTable } from "./banTinDaLuu";
+import { BanTinDaXemTable } from "./banTinDaXem";
 
 export const BanTinTable = mysqlTable("BanTin", {
 	maBanTin: varchar("maBanTin", { length: 36 }).primaryKey(),
@@ -34,4 +36,7 @@ export const BanTin_Relations = relations(BanTinTable, ({ one, many }) => ({
 		references: [NhanVienTable.maNhanVien],
 	}),
 	danhGia: many(DanhGiaTable),
+
+	banTinDaLuu: many(BanTinDaLuuTable),
+	banTinDaXem: many(BanTinDaXemTable),
 }));

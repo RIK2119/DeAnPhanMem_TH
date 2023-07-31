@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { datetime, decimal, mysqlTable, text, varchar } from "drizzle-orm/mysql-core";
 
 import { BanTinTable } from "./banTin";

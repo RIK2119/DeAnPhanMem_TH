@@ -1,5 +1,5 @@
-import { relations, sql } from "drizzle-orm";
-import { mysqlTable, text, varchar } from "drizzle-orm/mysql-core";
+import { relations } from "drizzle-orm";
+import { mysqlTable, varchar } from "drizzle-orm/mysql-core";
 
 import { BanTinTable } from "./banTin";
 
@@ -7,9 +7,8 @@ import { BanTinTable } from "./banTin";
 export const DanhMucTable = mysqlTable("DanhMuc", {
 	maDanhMuc: varchar("maDanhMuc", { length: 36 }).primaryKey(),
 	tenDanhMuc: varchar("tenDanhMuc", { length: 255 }).notNull().unique(),
-	moTa: text("moTa").notNull(),
 });
 
 export const DanhMuc_Relations = relations(DanhMucTable, ({ many }) => ({
-	BanTin: many(BanTinTable),
+	banTin: many(BanTinTable),
 }));

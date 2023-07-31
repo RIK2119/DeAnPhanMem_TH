@@ -12,14 +12,14 @@ import { Badge } from "@ui/badge";
 import { encodeBanTinPath } from "@/utils/path";
 import { Share } from "lucide-react";
 
-type paramsType = { banTin: InferModel<typeof BanTinTable, "select"> & { danhMuc: InferModel<typeof DanhMucTable, "select"> | null } };
+type ParamsType = { banTin: InferModel<typeof BanTinTable, "select"> & { danhMuc: InferModel<typeof DanhMucTable, "select"> | null } };
 
-const BanTinMoi = ({ banTin }: paramsType) => {
+const BanTinMoi = ({ banTin }: ParamsType) => {
 	const banTinPath = encodeBanTinPath(banTin);
 
 	return (
-		<div className="flex flex-col gap-2">
-			<Link href={banTinPath} className="h-full overflow-hidden">
+		<div className="grid grid-cols-[1fr_minmax(auto,20%)] gap-2">
+			<Link href={banTinPath} className="col-span-2 h-full overflow-hidden">
 				<div className="grid grid-cols-[1fr_minmax(auto,20%)] gap-5">
 					<div className="place-self-center">
 						<h4 className="text-xl font-bold">{banTin.tenBanTin}</h4>
@@ -33,18 +33,15 @@ const BanTinMoi = ({ banTin }: paramsType) => {
 					</div>
 				</div>
 			</Link>
+			<div className="flex items-center justify-between">
+				<Badge variant="default" className="w-max">
+					{banTin.danhMuc?.tenDanhMuc}
+				</Badge>
 
-			<div className="grid grid-cols-[1fr_minmax(auto,20%)] gap-5">
-				<div className="flex items-center justify-between">
-					<Badge variant="default" className="w-max">
-						{banTin.danhMuc?.tenDanhMuc}
-					</Badge>
-
-					<div>
-						<button>
-							<Share />
-						</button>
-					</div>
+				<div className="">
+					<button title="Chia sẽ bản tin này">
+						<Share size={22} />
+					</button>
 				</div>
 			</div>
 		</div>

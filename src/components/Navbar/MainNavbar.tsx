@@ -1,24 +1,26 @@
 "use client";
 
+import type { User } from "@clerk/clerk-sdk-node";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Bell, Search, TimerIcon, UserCircle } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
 
 import { Separator } from "@ui/separator";
 import { RealTime } from "./Realtime";
+import { UserDropdown } from "./userDropdown";
 
-const MainNavbar = ({ userId }: { userId: string | null }) => {
+const MainNavbar = ({ user }: { user: User | null }) => {
 	const currentPath = usePathname();
 
 	return (
 		<nav className="fixed top-0 z-50 w-full backdrop-blur-md backdrop-saturate-150">
 			<section className="border-b-[1px] border-black/50 py-5">
-				<main className="mx-auto flex max-w-6xl items-center justify-between ">
+				<main className="container mx-auto flex items-center justify-between px-3">
 					<div className="flex h-7 items-center space-x-4">
 						<Link href="/" className="w-max text-2xl">
-							<h2 className="w-max">Bản tin 24H</h2>
+							<h2 className="w-max font-bold">Bản tin 24H</h2>
 						</Link>
 
 						<Separator orientation="vertical" className="bg-black dark:bg-white" />
@@ -38,8 +40,8 @@ const MainNavbar = ({ userId }: { userId: string | null }) => {
 							<Search size={20} />
 						</button>
 
-						{userId ? (
-							<UserButton showName={true} afterSignOutUrl="/" />
+						{user ? (
+							<UserDropdown user={user} />
 						) : (
 							<Link
 								href={{

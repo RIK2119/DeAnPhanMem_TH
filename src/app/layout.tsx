@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 
 import React from "react";
 
-import { ClerkProvider, auth } from "@clerk/nextjs";
+import { ClerkProvider, currentUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
 import type { Metadata } from "next";
@@ -10,6 +10,8 @@ import { Inter } from "next/font/google";
 
 import { MainNavbar } from "@/components/Navbar/MainNavbar";
 import { Toaster } from "@/components/Toaster";
+import { BottomFooter } from "@/components/layout/BottomFooter";
+import { MainLayout } from "@/components/layout/MainLayout";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", weight: "400" });
 
@@ -20,21 +22,22 @@ export const metadata: Metadata = {
 	authors: { name: "Asakuri", url: "https://github.com/Noki-Asakuri" },
 	keywords: ["Bản Tin 24H", "tin tức", "sự kiện", "xã hội", "kinh doanh", "công nghệ", "nội dung đa dạng"],
 	viewport: { initialScale: 1, maximumScale: 1 },
+	icons: "/favicon.png",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-	const { userId } = auth();
-
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+	const user = await currentUser();
 	const isDarkMode = true;
 
 	return (
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		<ClerkProvider appearance={{ baseTheme: isDarkMode && dark }}>
-			<html lang="en" className={isDarkMode && "dark"}>
+		<ClerkProvider appearance={{ baseTheme: isDarkMode ? dark : undefined }}>
+			<html lang="en" className={isDarkMode ? "dark" : undefined}>
 				<head />
-				<body className={inter.className}>
-					<MainNavbar userId={userId} />
-					<main className="min-h-screen min-w-full dark:bg-neutral-900">{children}</main>
+				<body className={`${inter.className} flex min-h-screen flex-col dark:bg-neutral-900`}>
+					<MainNavbar user={user} />
+					<MainLayout>{children}</MainLayout>
+					<BottomFooter />
 
 					<Toaster />
 				</body>

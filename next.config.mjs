@@ -10,7 +10,7 @@ const config = {
 	experimental: { appDir: true, serverActions: true },
 
 	images: {
-		domains: ["i1-vnexpress.vnecdn.net", "i1-kinhdoanh.vnecdn.net", "images.clerk.dev"],
+		domains: ["i1-vnexpress.vnecdn.net", "i1-kinhdoanh.vnecdn.net", "images.clerk.dev", "img.clerk.com"],
 	},
 
 	/**

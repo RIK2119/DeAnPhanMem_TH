@@ -74,7 +74,7 @@ export const EmailNguoiDung = ({ user }: { user: User }) => {
 	);
 };
 
-export const BaoMat2Lop = ({ user }: { user: User }) => {
+export const BaoMat2Lop = ({}: { user: User }) => {
 	return (
 		<>
 			<div className="flex items-center justify-between py-2">

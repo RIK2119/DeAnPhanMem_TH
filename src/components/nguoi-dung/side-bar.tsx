@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { SignOutButton } from "@clerk/nextjs";
 
 import type { ReactNode } from "react";
 
 export const NguoiDungSideBar = () => {
 	const currentPath = usePathname();
+	const router = useRouter();
 
 	return (
 		<div className="flex w-1/5 flex-col items-center justify-start gap-2 rounded-lg bg-muted p-2 text-muted-foreground">
@@ -29,7 +31,13 @@ export const NguoiDungSideBar = () => {
 			</div>
 
 			<div className="w-full">
-				<button className="w-full rounded-lg p-3 hover:bg-[#0a0a0a] hover:text-white">Đăng xuất</button>
+				<SignOutButton
+					signOutCallback={() => {
+						router.refresh();
+					}}
+				>
+					<button className="w-full rounded-lg p-3 hover:bg-[#0a0a0a] hover:text-white">Đăng xuất</button>
+				</SignOutButton>
 			</div>
 
 			<div className="h-full w-full text-center text-sm">

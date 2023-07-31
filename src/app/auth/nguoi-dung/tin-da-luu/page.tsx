@@ -36,7 +36,9 @@ export default async function UserProfilePage() {
 				{data.length === 0 && (
 					<div>
 						<span>Bạn chưa lưu bản tin nào</span>
-						<Link href="/"> Khám phá ngay! </Link>
+						<Link href="/" className="text-blue-500">
+							Khám phá ngay!
+						</Link>
 					</div>
 				)}
 

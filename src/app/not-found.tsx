@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function NotFoundPage() {
 	return (
 		<div className="mt-40 flex flex-col items-center">
-			<h1 className="text-9xl font-bold">
+			<h1 className="flex items-center justify-center text-9xl font-bold">
 				<AlertTriangle size={60} /> 404 <AlertTriangle size={60} />
 			</h1>
 			<h2 className="mt-0 text-6xl font-medium">Trang không tồn tại</h2>

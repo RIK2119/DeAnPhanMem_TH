@@ -3,6 +3,7 @@
 import { luuBanTin } from "@/server/action/luuBanTin";
 import type { BanTinTable } from "@/server/db/schema/banTin";
 import type { DanhMucTable } from "@/server/db/schema/danhMuc";
+import { getUrl } from "@/utils/path";
 import type { User } from "@clerk/clerk-sdk-node";
 import type { InferModel } from "drizzle-orm";
 
@@ -16,12 +17,6 @@ import { toast } from "react-hot-toast";
 type ParamsType = {
 	banTin: InferModel<typeof BanTinTable, "select"> & { danhMuc: InferModel<typeof DanhMucTable, "select"> | null };
 	user: User | null;
-};
-
-const getUrl = (host: string, path: string) => {
-	const origin = host.startsWith("localhost") ? "https://banTin24h.vercel.app" : `https://${host}`;
-
-	return origin + decodeURIComponent(path);
 };
 
 export const ThanhCongCu = ({ banTin, host, user, daLuu }: ParamsType & { host: string; daLuu: boolean }) => {

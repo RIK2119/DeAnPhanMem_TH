@@ -13,3 +13,9 @@ export const decodeBanTinPath = (tenBanTin_maBanTin: string) => {
 
 	return [tenBanTin, maBanTin] as const;
 };
+
+export const getUrl = (host: string, path: string) => {
+	const origin = host.startsWith("localhost") ? "https://banTin24h.vercel.app" : `https://${host}`;
+
+	return origin + decodeURIComponent(path);
+};

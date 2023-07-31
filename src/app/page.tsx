@@ -1,20 +1,33 @@
+import { headers } from "next/headers";
+
 import { HeroMain } from "@/components/HomePage/Hero";
 import { BanTinHot } from "@/components/HomePage/BanTinHot";
 
 import { db } from "@/server/db/client";
 
-import { desc } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 import { Newspaper } from "lucide-react";
 import { BanTinMoi } from "@/components/HomePage/BanTinMoi";
 import { SideBar } from "@/components/HomePage/Sidebar";
 import { Separator } from "@/components/ui/separator";
 
+export const dynamic = "force-dynamic",
+	fetchCache = "default-no-store";
+
 export default async function Home() {
-	const [banTin, danhMuc] = await db.transaction(async (tx) => {
+	const host = headers().get("host") as string;
+
+	const [banTin, banTinRandom, danhMuc] = await db.transaction(async (tx) => {
 		const banTin = await tx.query.BanTinTable.findMany({
 			with: { danhGia: true, danhMuc: true },
 			limit: 3,
 			orderBy: (banTin) => desc(banTin.luotXem),
+		});
+
+		const banTinRandom = await tx.query.BanTinTable.findMany({
+			with: { danhGia: true, danhMuc: true },
+			limit: 3,
+			orderBy: () => sql`RAND()`,
 		});
 
 		const danhMuc = await tx.query.DanhMucTable.findMany({
@@ -22,8 +35,10 @@ export default async function Home() {
 			limit: 3,
 		});
 
-		return [banTin, danhMuc] as const;
+		return [banTin, banTinRandom, danhMuc] as const;
 	});
+
+	console.log(danhMuc);
 
 	return (
 		<>
@@ -49,10 +64,10 @@ export default async function Home() {
 
 				<div className="flex w-full border-t-[1px] border-t-black dark:border-t-gray-500/60">
 					<div className="flex w-2/3 flex-col gap-y-5 border-r-[1px] border-r-black px-6 py-5 dark:border-r-gray-500/60">
-						{banTin.map((bt, i) => {
+						{banTinRandom.map((bt, i) => {
 							return (
 								<>
-									<BanTinMoi key={bt.maBanTin} banTin={bt} />
+									<BanTinMoi key={bt.maBanTin} banTin={bt} host={host} />
 									{i < banTin.length - 1 && <Separator orientation="horizontal" className="dark:bg-gray-500/60" />}
 								</>
 							);

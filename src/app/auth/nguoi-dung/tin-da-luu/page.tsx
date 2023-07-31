@@ -1,75 +1,95 @@
-import { ThongTinChungTab } from "@/components/nguoi-dung/thong-tin-chung";
-import { SignOutButton, currentUser } from "@clerk/nextjs";
+import { db } from "@/server/db/client";
+import { ChiaSeDropdown } from "@/components/chiaSeDropdown";
 
-import { Button } from "@ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/card";
+import { convertClerkUserIdToUUID } from "@/utils/clerk";
+import { encodeBanTinPath } from "@/utils/path";
 
-export default async function UserProfilePage({ searchParams: { tab } }: { searchParams: { tab: string | undefined } }) {
+import { currentUser } from "@clerk/nextjs";
+
+import { headers } from "next/headers";
+import Image from "next/image";
+import Link from "next/link";
+
+import { BookMarked, MessagesSquare } from "lucide-react";
+
+const layBanTinDaLuu = async (maNguoiDung: string) => {
+	return await db.query.BanTinDaLuuTable.findMany({
+		where: (table, { eq }) => eq(table.maNguoiDung, maNguoiDung),
+		with: { banTin: { with: { danhGia: true, danhMuc: true } } },
+	});
+};
+
+export default async function UserProfilePage() {
 	const user = await currentUser();
-	if (!user) return;
+	if (!user) return <></>;
+
+	const host = headers().get("host") as string;
+	const data = await layBanTinDaLuu(convertClerkUserIdToUUID(user.id));
 
 	return (
-		<div className="max-w container mx-auto flex h-screen flex-col gap-y-5 py-5 pt-28 ">
-			<Tabs defaultValue={tab ?? "thong-tin-chung"} orientation="vertical" className="flex h-full gap-5">
-				<TabsList className="h-max w-1/4 flex-col gap-1">
-					<TabsTrigger className="w-full py-3" value="thong-tin-chung">
-						Thông tin chung
-					</TabsTrigger>
+		<Card className="flex h-full flex-col">
+			<CardHeader>
+				<CardTitle className="text-center text-2xl font-bold">Bản tin đã lưu</CardTitle>
+			</CardHeader>
+			<CardContent>
+				{data.length === 0 && (
+					<div>
+						<span>Bạn chưa lưu bản tin nào</span>
+						<Link href="/"> Khám phá ngay! </Link>
+					</div>
+				)}
 
-					<TabsTrigger className="w-full py-3" value="tin-da-luu">
-						Tin đã lưu
-					</TabsTrigger>
+				<div className="flex flex-col items-center gap-y-4">
+					{data.length > 0 &&
+						data.map((d) => {
+							const banTin = d.banTin!;
 
-					<TabsTrigger className="w-full py-3" value="tin-da-xem">
-						Tin đã xem
-					</TabsTrigger>
+							const banTinPath = encodeBanTinPath(banTin);
 
-					<TabsTrigger className="w-full py-3" value="thoat">
-						Thoát
-					</TabsTrigger>
-				</TabsList>
+							return (
+								<div key={banTin.maBanTin} className="grid w-2/3 grid-cols-[160px_auto] gap-4">
+									<div className="relative aspect-video w-40 overflow-hidden rounded-lg">
+										<Link href={banTinPath}>
+											<Image src={banTin.hinhNho} alt={banTin.tenBanTin} fill />
+										</Link>
+									</div>
 
-				<ThongTinChungTab user={user} />
+									<div className="w-full">
+										<Link href={banTinPath}>
+											<h4>{banTin.tenBanTin}</h4>
+										</Link>
 
-				<TabsContent value="tin-da-luu" className="mt-0 w-full">
-					<Card className="flex flex-col">
-						<CardHeader>
-							<CardTitle className="text-center text-2xl font-bold">Tin đã lưu</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-2">
-							<div></div>
-						</CardContent>
-					</Card>
-				</TabsContent>
+										<div className="flex items-center justify-between text-sm">
+											<div>
+												<span className="text-gray-500 transition-colors hover:text-blue-500">
+													<Link href={`/danhMuc/${banTin.danhMuc?.tenDanhMuc}`}>
+														{banTin.danhMuc?.tenDanhMuc}
+													</Link>
+												</span>{" "}
+												<span> - {d.ngayLuu?.toLocaleDateString("vi")}</span>
+											</div>
 
-				<TabsContent value="tin-da-xem" className="mt-0 w-full">
-					<Card className="flex flex-col">
-						<CardHeader>
-							<CardTitle className="text-center text-2xl font-bold">Tin đã xem</CardTitle>
-						</CardHeader>
-						<CardContent className="space-y-2">
-							<div></div>
-						</CardContent>
-					</Card>
-				</TabsContent>
+											<div className="flex items-center justify-center gap-4">
+												<div className="flex gap-2">
+													<MessagesSquare size={20} /> {banTin.danhGia.length}
+												</div>
 
-				<TabsContent value="thoat" className="mt-0 h-full w-full">
-					<Card className="flex flex-col">
-						<CardHeader>
-							<CardTitle className="text-center text-2xl font-bold">Thoát</CardTitle>
-							<CardDescription className="text-center">
-								Bạn có chắc chắn bạn muốn thoát khỏi tài khoảng này không?
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="flex items-center justify-center space-y-2">
-							<SignOutButton>
-								<Button> Thoát </Button>
-							</SignOutButton>
-						</CardContent>
-					</Card>
-				</TabsContent>
-			</Tabs>
-		</div>
+												<ChiaSeDropdown host={host} tenBanTin={banTin.tenBanTin} duongDanBanTin={banTinPath} />
+
+												<form className="flex items-center justify-center">
+													<button type="submit">
+														<BookMarked size={20} />
+													</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							);
+						})}
+				</div>
+			</CardContent>
+		</Card>
 	);
 }

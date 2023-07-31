@@ -8,13 +8,14 @@ import type { InferModel } from "drizzle-orm";
 import type { BanTinTable } from "@/server/db/schema/banTin";
 import type { DanhMucTable } from "@/server/db/schema/danhMuc";
 
-import { Badge } from "@ui/badge";
 import { encodeBanTinPath } from "@/utils/path";
-import { Share } from "lucide-react";
+import { Badge } from "@ui/badge";
+
+import { ChiaSeDropdown } from "../chiaSeDropdown";
 
 type ParamsType = { banTin: InferModel<typeof BanTinTable, "select"> & { danhMuc: InferModel<typeof DanhMucTable, "select"> | null } };
 
-const BanTinMoi = ({ banTin }: ParamsType) => {
+export const BanTinMoi = ({ banTin, host }: ParamsType & { host: string }) => {
 	const banTinPath = encodeBanTinPath(banTin);
 
 	return (
@@ -39,13 +40,9 @@ const BanTinMoi = ({ banTin }: ParamsType) => {
 				</Badge>
 
 				<div className="">
-					<button title="Chia sẽ bản tin này">
-						<Share size={22} />
-					</button>
+					<ChiaSeDropdown host={host} tenBanTin={banTin.tenBanTin} duongDanBanTin={banTinPath} />
 				</div>
 			</div>
 		</div>
 	);
 };
-
-export { BanTinMoi };

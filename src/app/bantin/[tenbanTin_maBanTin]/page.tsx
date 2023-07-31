@@ -105,7 +105,7 @@ export default async function BanTinPage({ params: { tenbanTin_maBanTin } }: Par
 				<section className="w-2/3">
 					<div className="flex items-center justify-between">
 						<div>
-							<Link href={`/${banTin.danhMuc?.tenDanhMuc}`} className="text-blue-600 hover:text-blue-400">
+							<Link href={`/danhMuc/${banTin.danhMuc?.tenDanhMuc}`} className="text-blue-600 hover:text-blue-400">
 								{banTin.danhMuc?.tenDanhMuc}
 							</Link>
 						</div>

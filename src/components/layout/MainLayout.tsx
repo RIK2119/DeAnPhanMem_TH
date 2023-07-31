@@ -6,6 +6,6 @@ import type { ReactNode } from "react";
 const MainLayout = ({ children }: { children: ReactNode }) => {
 	// const [parent] = useAutoAnimate();
 
-	return <main className="h-full max-h-max max-w-full flex-1 overflow-hidden">{children}</main>;
+	return <main className="h-full flex flex-col max-h-max max-w-full flex-1 overflow-hidden">{children}</main>;
 };
 export { MainLayout };

@@ -4,9 +4,18 @@ import { db } from "@/server/db/client";
 import { BanTinDaXemTable } from "@/server/db/schema/banTinDaXem";
 import { convertClerkUserIdToUUID } from "@/utils/clerk";
 
-import type { InferModel } from "drizzle-orm";
+import { eq, type InferModel } from "drizzle-orm";
+import { BanTinTable } from "../db/schema/banTin";
 
-export const danhDauDaXemBanTin = async ({ maBanTin, maNguoiDung }: { maBanTin: string; maNguoiDung?: string }) => {
+export const danhDauDaXemBanTin = async ({
+	maBanTin,
+	maNguoiDung,
+	luoiXem,
+}: {
+	maBanTin: string;
+	maNguoiDung?: string;
+	luoiXem: number;
+}) => {
 	if (!maNguoiDung) throw new Error("Chưa Đăng Nhập");
 
 	const banTin: InferModel<typeof BanTinDaXemTable, "insert"> = {
@@ -18,4 +27,9 @@ export const danhDauDaXemBanTin = async ({ maBanTin, maNguoiDung }: { maBanTin: 
 		.insert(BanTinDaXemTable)
 		.values(banTin)
 		.onDuplicateKeyUpdate({ set: { maBanTin: banTin.maBanTin, maNguoiDung: banTin.maNguoiDung } });
+
+	await db
+		.update(BanTinTable)
+		.set({ luotXem: luoiXem + 1 })
+		.where(eq(BanTinTable.maBanTin, maBanTin));
 };

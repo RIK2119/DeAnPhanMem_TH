@@ -24,7 +24,11 @@ export function DanhDauDaXemBanTin({ banTin, user }: { banTin: Awaited<ReturnTyp
 			hidden
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			action={async () => {
-				await danhDauDaXemBanTin({ maBanTin: banTin!.maBanTin, maNguoiDung: convertClerkUserIdToUUID(user.id) });
+				await danhDauDaXemBanTin({
+					maBanTin: banTin!.maBanTin,
+					maNguoiDung: convertClerkUserIdToUUID(user.id),
+					luoiXem: banTin!.luotXem || 0,
+				});
 			}}
 		>
 			<input ref={ref} type="submit" hidden />

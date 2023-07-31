@@ -17,6 +17,7 @@ const layBanTinDaLuu = async (maNguoiDung: string) => {
 	return await db.query.BanTinDaLuuTable.findMany({
 		where: (table, { eq }) => eq(table.maNguoiDung, maNguoiDung),
 		with: { banTin: { with: { danhGia: true, danhMuc: true } } },
+		orderBy: (table, { desc }) => desc(table.ngayLuu),
 	});
 };
 

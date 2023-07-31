@@ -18,6 +18,7 @@ const layBanTinDaXem = async (maNguoiDung: string) => {
 	return await db.query.BanTinDaXemTable.findMany({
 		where: (table, { eq }) => eq(table.maNguoiDung, maNguoiDung),
 		with: { banTin: { with: { danhGia: true, danhMuc: true } } },
+		orderBy: (table, { desc }) => desc(table.ngayXem),
 	});
 };
 

@@ -16,7 +16,7 @@ export const SideBar = ({ danhMuc }: ParamsType) => {
 	return (
 		<aside className="flex flex-col gap-y-5">
 			{danhMuc.map((item) => {
-				if (!item.banTin || item.banTin.length) return;
+				if (!item.banTin || item.banTin.length === 0) return;
 
 				return (
 					<div key={item.maDanhMuc}>

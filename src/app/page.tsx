@@ -26,13 +26,14 @@ export default async function Home() {
 
 		const banTinRandom = await tx.query.BanTinTable.findMany({
 			with: { danhGia: true, danhMuc: true },
-			limit: 3,
+			limit: 5,
 			orderBy: () => sql`RAND()`,
 		});
 
 		const danhMuc = await tx.query.DanhMucTable.findMany({
-			with: { banTin: true },
+			with: { banTin: { limit: 1 } },
 			limit: 3,
+			offset: 3,
 		});
 
 		return [banTin, banTinRandom, danhMuc] as const;

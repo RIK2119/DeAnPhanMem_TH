@@ -50,7 +50,7 @@ export default async function Home() {
 					Các bản tin <strong className="text-red-500"> HOT </strong>{" "}
 				</h2>
 
-				<div className="grid h-max grid-cols-3 items-center gap-5">
+				<div className="grid h-max grid-cols-1 items-center gap-5 md:grid-cols-2 lg:grid-cols-3">
 					{banTin.map((item) => (
 						<BanTinHot key={item.maBanTin} item={item} />
 					))}

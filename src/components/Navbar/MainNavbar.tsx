@@ -5,11 +5,12 @@ import type { User } from "@clerk/clerk-sdk-node";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Bell, Search, TimerIcon, UserCircle } from "lucide-react";
+import { Bell, TimerIcon, UserCircle } from "lucide-react";
 
 import { Separator } from "@ui/separator";
 import { RealTime } from "./Realtime";
 import { UserDropdown } from "./userDropdown";
+import { SearchBar } from "./SearchBar";
 
 const MainNavbar = ({ user }: { user: User | null }) => {
 	const currentPath = usePathname();
@@ -28,7 +29,7 @@ const MainNavbar = ({ user }: { user: User | null }) => {
 						<RealTime />
 					</div>
 
-					<div className="flex h-7 items-center space-x-4 text-sm">
+					<div className="flex h-7 w-full items-center justify-end space-x-4 text-sm">
 						<Link className="flex items-center justify-center gap-2" href="/tin-tuc-24h" title="Tin tức mới nhất trong 24h qua">
 							<TimerIcon />
 							Mới nhất
@@ -36,9 +37,7 @@ const MainNavbar = ({ user }: { user: User | null }) => {
 
 						<Separator orientation="vertical" className="bg-black dark:bg-white" />
 
-						<button className="">
-							<Search size={20} />
-						</button>
+						<SearchBar />
 
 						{user ? (
 							<UserDropdown user={user} />

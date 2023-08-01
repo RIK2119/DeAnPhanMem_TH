@@ -9,6 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@ui/dropdown-menu";
+import { SignOutButton } from "@clerk/nextjs";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import Link from "next/link";
@@ -51,7 +52,9 @@ export function UserDropdown({ user }: { user: User }) {
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem>Đăng xuất</DropdownMenuItem>
+				<DropdownMenuItem>
+					<SignOutButton>Đăng xuất</SignOutButton>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

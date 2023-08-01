@@ -39,8 +39,6 @@ export default async function Home() {
 		return [banTin, banTinRandom, danhMuc] as const;
 	});
 
-	console.log(danhMuc);
-
 	return (
 		<>
 			<HeroMain />

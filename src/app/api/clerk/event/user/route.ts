@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 
-import { db } from "@/server/db/client";
-import { NguoiDungTable } from "@/server/db/schema/nguoiDung";
+import { env } from "@/env.mjs";
+import { prisma } from "@/server/db/prisma";
 import { convertClerkUserIdToUUID } from "@/utils/clerk";
 
-import { Webhook } from "svix";
 import type { WebhookEvent } from "@clerk/clerk-sdk-node";
-import { eq, type InferModel } from "drizzle-orm";
-import { env } from "@/env.mjs";
+import { Webhook } from "svix";
 
 export async function POST(request: Request) {
 	const payload = (await request.json()) as WebhookEvent;
@@ -27,43 +25,39 @@ export async function POST(request: Request) {
 		case "user.created": {
 			const main_email = data.email_addresses.filter((email) => email.id === data.primary_email_address_id)[0]!;
 
-			const user: InferModel<typeof NguoiDungTable, "insert"> = {
-				maNguoiDung: convertClerkUserIdToUUID(data.id),
-				gioiTinh: true,
-				anhDaiDien: data.image_url,
-				ngaySinh: new Date(),
-				email: main_email.email_address,
-				tenNguoiDung: data.username ?? (main_email.email_address.split("@")[0] as string),
-			};
+			const user = await prisma.nguoiDung.create({
+				data: {
+					MaNguoiDung: convertClerkUserIdToUUID(data.id),
+					AnhDaiDien: data.image_url,
+					Email: main_email.email_address,
+					GioiTinh: "Male",
+					TenNguoiDung: data.username ?? data.last_name + data.first_name,
+				},
+			});
 
-			await db.insert(NguoiDungTable).values(user);
-			break;
+			return NextResponse.json({ ...user });
 		}
 
 		case "user.deleted": {
 			const nguoiDungId = convertClerkUserIdToUUID(data.id as string);
-			await db.delete(NguoiDungTable).where(eq(NguoiDungTable.maNguoiDung, nguoiDungId));
+			await prisma.nguoiDung.delete({ where: { MaNguoiDung: nguoiDungId } });
 
-			break;
+			return NextResponse.json({ message: "Delete user with id = " + nguoiDungId });
 		}
 
 		case "user.updated": {
 			const main_email = data.email_addresses.filter((email) => email.id === data.primary_email_address_id)[0]!;
 
-			const user: InferModel<typeof NguoiDungTable, "insert"> = {
-				maNguoiDung: convertClerkUserIdToUUID(data.id),
-				gioiTinh: true,
-				anhDaiDien: data.image_url,
-				ngaySinh: new Date(),
-				email: main_email.email_address,
-				tenNguoiDung: data.username ?? (main_email.email_address.split("@")[0] as string),
-			};
+			const user = await prisma.nguoiDung.update({
+				where: { MaNguoiDung: convertClerkUserIdToUUID(data.id) },
+				data: {
+					AnhDaiDien: data.image_url,
+					Email: main_email.email_address,
+					TenNguoiDung: data.username ?? data.last_name + data.first_name,
+				},
+			});
 
-			await db.update(NguoiDungTable).set(user).where(eq(NguoiDungTable.maNguoiDung, user.maNguoiDung));
-
-			break;
+			return NextResponse.json({ ...user });
 		}
 	}
-
-	return NextResponse.json({ success: true });
 }

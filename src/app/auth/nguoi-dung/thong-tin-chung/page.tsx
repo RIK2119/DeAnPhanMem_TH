@@ -1,49 +1,31 @@
-import { AnhDaiDien, BaoMat2Lop, EmailNguoiDung, MaIDNguoiDung, TenNguoiDung } from "@/components/nguoi-dung/thong-tin-chung";
-import { currentUser } from "@clerk/nextjs";
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@ui/card";
-import { Separator } from "@ui/separator";
+import { useUser } from "@clerk/nextjs";
 
-export default async function UserProfilePage() {
-	const user = await currentUser();
-	if (!user) return;
+import { UserProfile } from "@clerk/nextjs";
+import { Spinner } from "@nextui-org/react";
+
+export default function UserProfilePage() {
+	const { isLoaded } = useUser();
 
 	return (
-		<Card className="flex h-full flex-col border-none">
-			<CardHeader>
-				<CardTitle className="text-center text-2xl font-bold">Thông tin chung</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<div className="flex flex-col gap-y-5">
-					<div>
-						<MaIDNguoiDung user={user} />
-					</div>
-
-					<Separator orientation="horizontal" />
-
-					<div>
-						<AnhDaiDien user={user} />
-					</div>
-
-					<Separator orientation="horizontal" />
-
-					<div>
-						<TenNguoiDung user={user} />
-					</div>
-
-					<Separator orientation="horizontal" />
-
-					<div>
-						<EmailNguoiDung user={user} />
-					</div>
-
-					<Separator orientation="horizontal" />
-
-					<div>
-						<BaoMat2Lop user={user} />
-					</div>
+		<div className="flex h-full items-start justify-center">
+			{!isLoaded ? (
+				<div className="flex h-full flex-1 items-center justify-center">
+					<Spinner label="Loading..." color="primary" />
 				</div>
-			</CardContent>
-		</Card>
+			) : (
+				<UserProfile
+					appearance={{
+						elements: {
+							rootBox: { width: "100%" },
+							card: { margin: 0 },
+							navbar: { padding: "1.5rem 1rem" },
+							pageScrollBox: { padding: "1.5rem 1rem" },
+						},
+					}}
+				/>
+			)}
+		</div>
 	);
 }
